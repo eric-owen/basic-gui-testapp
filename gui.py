@@ -17,6 +17,7 @@ while True:
     event, values = window.read()
     match event:
         case 'add':
+
             todos = func.get_todos()
             new_todo = values['todo'] + '\n'
             todos.append(new_todo)
@@ -24,23 +25,29 @@ while True:
             window['todos'].update(values=todos)
 
         case 'edit':
-            todo_to_edit = values['todos'][0]
-            new_todo = values['todo']
+            try:
+                todo_to_edit = values['todos'][0]
+                new_todo = values['todo']
 
-            todos = func.get_todos()
-            index = todos.index(todo_to_edit)
-            todos[index] = new_todo
-            func.write_todos(todos)
-            window['todos'].update(values=todos)
+                todos = func.get_todos()
+                index = todos.index(todo_to_edit)
+                todos[index] = new_todo
+                func.write_todos(todos)
+                window['todos'].update(values=todos)
+            except IndexError:
+                sg.popup('please select item first')
         case 'todos':
             window['todo'].update(value=values['todos'][0])
         case 'complete':
-            todo_to_complete = values['todos'][0]
-            todos = func.get_todos()
-            todos.remove(todo_to_complete)
-            func.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value='')
+            try:
+                todo_to_complete = values['todos'][0]
+                todos = func.get_todos()
+                todos.remove(todo_to_complete)
+                func.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value='')
+            except IndexError:
+                sg.popup('please select item first')
         case 'exit':
             break
         case sg.WIN_CLOSED:
